@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+  <title>Restaurant</title>
 </head>
 <!-- estilo del plato
   1- debe llevar un nombre plato
@@ -12,5 +16,79 @@
   3- id
   4- imagen del menu -->
 <body>
+  <header class="section-header">
+      <img class="logo" src="img/Restaurant-logo.png" alt="logo" width="190">
+  </header>
+  <main>
+    <section class="section-menu">
+      <div class="menu-img">
+        <img src="img/menu-saludable.jpg" alt="menu-saludable" width="200">
+        <h1>Menu Saludable</h1>
+      </div>
+      <div class="menu-img">
+        <img src="img/menu-italiano.jpg" alt="menu-italiano" width="200">
+        <h1>Menu Italiano</h1>
+      </div>
+      <div class="menu-img">
+        <img src="img/menu-corriente.jpg" alt="menu-corriente" width="200">
+        <h1>Menu Corriente</h1>
+      </div>
+    </section>
+    <section class="section-menu-two">
+      <div class="menu-img">
+        <img src="img/menu-mexicano.jpg" alt="menu-mexicano" width="200">
+        <h1>Menu Mexicano</h1>
+      </div>
+      <div class="menu-img">
+        <img src="img/menu-libre.jpg" alt="menu-libre" width="200">
+        <h1>Menu Libre</h1>
+      </div>
+    </section>
+    <section class="formulary">
+      <div class="text-formulary">
+        <h2>Festival de la gastronomia</h2>
+      </div>
+      <div class="inputs-formulary">
+        <input type="text" placeholder="Nombre de su pedido">
+      </div>
+      <div class="inputs-formulary">
+        <input type="text" placeholder="Cantidad">
+      </div>
+      <div class="inputs-formulary">
+        <input type="text" placeholder="Precio">
+      </div>
+      <div class="btn-buy-update">
+        <button class="btn-buy">Comprar</button>
+        <button class="btn-update">Actualizar</button>
+      </div>
+    </section>
+    <section>
+      <div>
+        <table class="table-result">
+          <tr>
+            <th>#</th>
+            <th>Pedido</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Action</th>
+          </tr>
+        </table>
+        <div class="icons-edit-delete">
+          <button class="icon-edit"><i class="far fa-edit"></i></button>
+          <button class="icon-delete"><i class="far fa-trash-alt"></i></button>
+        </div>
+      </div>
+    </section>
+    <footer class="section-footer">
+      <i class="fab fa-facebook-square"></i>
+      <i class="fab fa-instagram"></i>
+      <i class="fab fa-twitter-square"></i>
+      <i class="fab fa-github-alt"></i>
+      <hr>
+      <div class="text-footer">
+        <h3>Desarrollado por Juan Poveda - Leidy Paez</h3>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>
