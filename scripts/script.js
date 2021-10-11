@@ -102,7 +102,7 @@ class App extends DataBase {
     }
 
     DefaultData() {
-        if (this.Read()) return 
+        if (this.Read() && this.Read().length !== 0) return 
         this.Create("Menu Saludable",    15000, "img/menu-saludable.jpg");
         this.Create("Menu Italiano",     14000, "img/menu-italiano.jpg");
         this.Create("Menu Corriente",    12000, "img/menu-corriente.jpg");
