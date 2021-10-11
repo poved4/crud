@@ -115,15 +115,16 @@ class App extends DataBase {
 const DATABASE_NAME = 'restauranDB';
 const DATABASE_ORDER = 'customerOrder';
 
-const menu = document.getElementById('menu');
-const order = document.getElementById('order');
-const modal = document.getElementById('modal');
+const sectionMenu = document.getElementById('menu');
+const sectionOrder = document.getElementById('order');
+const sectionModal = document.getElementById('modal');
 
-const app = new App(menu, order, modal);
+const app = new App(sectionMenu, sectionOrder, sectionModal);
 
 menu.addEventListener('click', (e) => {
     if (e.target && e.target.className === 'menu-img') {
-        app.Modal(e.target.id);
+        app.Modal();
         e.stopPropagation();
+        console.log(e.target.id);
     }
 });
