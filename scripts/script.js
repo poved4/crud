@@ -38,12 +38,12 @@ class DataBase {
         this.SaveData(updateData);                      //Save new data
     }
 
-    // Read = () => JSON.parse(localStorage.getItem(this.key)); 
+    ReadOne = (id, isTrue = true) => this.Read(isTrue)[this.FilterByID(id, isTrue)];
+
     Read = (isTrue = true) => JSON.parse(localStorage.getItem(isTrue ? this.key : this.keyTwo));
     
-    FilterByID = (id) => this.Read().findIndex(obj => obj.id === id);
+    FilterByID = (id, isTrue = true) => this.Read(isTrue).findIndex(obj => obj.id === id);
 
-    // SaveData = (data) => localStorage.setItem(this.key, JSON.stringify(data));
     SaveData = (data, isTrue = true) => localStorage.setItem(isTrue ? this.key : this.keyTwo, JSON.stringify(data));
 
     // Math.random should be unique because of its seeding algorithm.
@@ -59,42 +59,54 @@ class App extends DataBase {
         this.orderTable = document.getElementById('order');
         this.sectionMenu = document.getElementById('menu');
         
-        this.Listeners();
         this.DefaultData(); 
         this.UpdateDisplay();
     }
 
     Modal (id) {
-        let modal = document.getElementById('modal');
-        
-        if (modal) { 
-            modal.remove(); 
+        const node = document.getElementById('modal');
+
+        if (node) { 
+            node.remove(); 
             window.location.reload(false);
-        } else {
-            const obj = this.Read()[this.FilterByID(id)];
-            document.getElementsByTagName('body')[0].innerHTML += `
-            <div class="modal active" id="modal">
-                <div class="formulary center">
-                    <h2 class="text-formulary">Festival de la gastronomia</h2>
-
-                    <p>Platillo: ${obj.name}</p>
-                    <p>precio:   ${obj.price}</p>
-
-                    <label for="quantity">Cantidad</label>
-                    <input type="number" name="quantity" placeholder="Cantidad">
-
-                    <button class="btn-buy" onclick="app.AddCart('${id}')">Comprar</button>
-                    <button class="btn-update" onclick="app.Modal()">Cancel</button>
+        } else { 
+            const obj = this.ReadOne(id);
+            const modalElement = `
+                <div class="modal active" id="modal">
+                    <div class="formulary center">
+                        <h2 class="text-formulary">Festival de la gastronomia</h2>
+    
+                        <p>Platillo: ${obj.name}</p>
+                        <p>precio:   ${obj.price}</p>
+    
+                        <label for="quantity">Cantidad</label>
+                        <input type="number" name="quantity" placeholder="Cantidad">
+    
+                        <button name="${obj.id}" class="btn-buy">Update</button>
+                        <button name="${obj.id}" class="btn-update">Cancel</button>
+                    </div>
                 </div>
-            </div>
-        `;
-        }
+            `;
+
+            document.getElementsByTagName('body')[0].innerHTML += modalElement;
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target && e.target.className === 'btn-buy') this.AddToCart(e.target.name);
+                if (e.target && e.target.className === 'btn-update') this.Modal();
+                e.stopPropagation();
+            });
+        } 
     }
 
-    AddCart () {
+    AddToCart (id) {
+        const order = this.ReadOne(id);
+        const quantity = document.querySelector(".formulary input").value;
+        order.quantity = quantity === null ? Math.abs(parseInt(quantity)) : 1;
+        delete order.urlPhoto;
+        
+        const data = this.Read(false);
+        data.push(order);
+        this.SaveData(data, false);
         this.Modal();
-        console.log('Added to cart');
-
     }
 
     UpdateDisplay () {
@@ -114,32 +126,37 @@ class App extends DataBase {
                     </div>
                 `
             });
+
+            this.sectionMenu.addEventListener('click', (e) => {
+                if (e.target && e.target.className === 'menu-img') {
+                    this.Modal(e.target.id);
+                    e.stopPropagation();
+                }
+            });
+
         } else if (element === 'order') {
-            this.Read(false).forEach(obj => {
+            this.Read(false).forEach((obj, i) => {
                 products += ` 
                     <tr>
-                        <td>${obj.id}</td>
+                        <td>${i + 1}</td>
                         <td>${obj.name}</td>
                         <td>${obj.quantity}</td>
                         <td>${obj.price}</td>
                         <td>${obj.price * obj.quantity}</td>
-                        <td><button class="icon-edit" onclick="app.Modal('${obj.id}')"><i class="far fa-edit"></i></button></td>
+                        <td><button class="icon-edit" name="${obj.id}"><i class="far fa-edit"></i></button></td>
                     </tr>
                 `
             });
+
+            this.orderTable.addEventListener('click', (e) => {
+                if (e.target && e.target.className === 'icon-edit') this.Modal(e.target.name);
+                e.stopPropagation();
+            });
+
         } else { products = `<div>NO DATA</div>`; }
 
         return products;
     };
-
-    Listeners () {
-        this.sectionMenu.addEventListener('click', (e) => {
-            if (e.target && e.target.className === 'menu-img') {
-                this.Modal(e.target.id);
-                e.stopPropagation();
-            }
-        });
-    }
 
     DefaultData () {
         if (this.Read() && this.Read().length !== 0) return 
