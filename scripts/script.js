@@ -10,19 +10,19 @@ class DataBase {
     }
 
     Create (name, price, urlPhoto) {
-        const id = new Date().getTime();    //Create a id whit the date
+        const id = this.GenerateID();   //Create a id whit the date
         const product = {id, name, price, urlPhoto}
-        const data = this.Read();   //Get Current Data 
-        data.push(product);         //Add new Product
-        this.SaveData(data);        //Save Data
-        return id;                  //return id code
+        const data = this.Read();       //Get Current Data 
+        data.push(product);             //Add new Product
+        this.SaveData(data);            //Save Data
+        return id;                      //return id code
     }
 
     Update (id, name, price, urlPhoto) {
-        let index = this.FilterByID(parseFloat(id));    //Get product position
-        const data = this.Read();   //Get Current Data 
+        let index = this.FilterByID(id);    //Get product position
+        const data = this.Read();           //Get Current Data 
 
-        const updateProduct = {     //update data
+        const updateProduct = {             //update data
             id: data[index].id,
             name: name || data[index].name,
             price: price || data[index].price,
@@ -34,7 +34,7 @@ class DataBase {
     }
 
     Delete(id) {
-        let index = this.FilterByID(parseFloat(id));    //Get product ID
+        let index = this.FilterByID(id);                //Get product ID
         const updateData = this.Read();                 //Get current Data
         updateData.splice(index, 1);                    //Delete obj
         this.SaveData(updateData);                      //Save new data
@@ -45,6 +45,11 @@ class DataBase {
     FilterByID = (id) => this.Read().findIndex(obj => obj.id === id);
 
     SaveData = (data) => localStorage.setItem(this.key, JSON.stringify(data));
+
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    GenerateID = () => '_' + Math.random().toString(36).substr(2, 9);
 }
 
 class App extends DataBase {
