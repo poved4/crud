@@ -1,6 +1,7 @@
 class DataBase {
     constructor () {
         this.key = DATABASE_NAME || "restauranDB";
+        this.keyTwo = DATABASE_ORDER || "customerOrder";
         
         if (!localStorage.getItem(this.key))  {
             const data = [];
@@ -46,6 +47,83 @@ class DataBase {
     SaveData = (data) => localStorage.setItem(this.key, JSON.stringify(data));
 }
 
+class App extends DataBase {
+    constructor (sectionMenu, orderTable) { 
+        super(); 
+        
+        this.orderTable = orderTable;
+        this.sectionMenu = sectionMenu;
+        
+        this.DefaultData(); 
+        this.UpdateDisplay();
+    }
+
+    Modal (id) {
+        // this.modal.classList.toggle('active');
+        // console.log('turn on modal');
+        console.log(id);
+    }
+
+    UpdateDisplay () {
+        this.sectionMenu.innerHTML = this.CreateElementsHTML(true);
+        // this.orderTable.innerHTML = this.CreateElementsHTML(false);
+    }
+
+    CreateElementsHTML = (x) => x ? this.Dishes() : this.Order();
+
+    Dishes() {
+        let products = [];
+
+        this.Read().forEach(obj => {
+            products += ` 
+                <div class="menu-img" id="${obj.id}">
+                    <img src="${obj.urlPhoto}" alt="${obj.name}" width="200">
+                    <h2>${obj.name}</h2>
+                </div>
+            `
+        });
+
+        return products;
+    }
+
+    Order() {
+        let products = [];
+
+        // this.Read().forEach(obj => {
+        //     products += ` 
+        //         <div class="menu-img" id="${obj.id}">
+        //             <img src="${obj.urlPhoto}" alt="${obj.name}" width="200">
+        //             <h2>${obj.name}</h2>
+        //         </div>
+        //     `
+        // });
+
+        return products;
+    }
+
+    DefaultData() {
+        if (this.Read()) return 
+        this.Create("Menu Saludable",    15000, "img/menu-saludable.jpg");
+        this.Create("Menu Italiano",     14000, "img/menu-italiano.jpg");
+        this.Create("Menu Corriente",    12000, "img/menu-corriente.jpg");
+        this.Create("Menu Mexicano",     25000, "img/menu-mexicano.jpg");
+        this.Create("Menu Libre",        25000, "img/menu-libre.jpg");
+    }
+}
+
 //_________________________________________________________________
 
 const DATABASE_NAME = 'restauranDB';
+const DATABASE_ORDER = 'customerOrder';
+
+const menu = document.getElementById('menu');
+const order = document.querySelector('order');
+
+const app = new App(menu, order);
+
+menu.addEventListener('click', (e) => {
+    if (e.target && e.target.className === 'menu-img') {
+        app.Modal(e.target.id);
+        e.stopPropagation();
+    }
+});
