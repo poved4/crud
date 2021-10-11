@@ -100,7 +100,7 @@ class App extends DataBase {
     AddToCart (id) {
         const order = this.ReadOne(id);
         const quantity = document.querySelector(".formulary input").value;
-        order.quantity = quantity === null ? Math.abs(parseInt(quantity)) : 1;
+        order.quantity = quantity === null ? 1 : Math.abs(parseInt(quantity));
         delete order.urlPhoto;
         
         const data = this.Read(false);
