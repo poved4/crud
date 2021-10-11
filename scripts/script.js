@@ -53,28 +53,59 @@ class DataBase {
 }
 
 class App extends DataBase {
-    constructor (sectionMenu, orderTable, modal) { 
+    constructor () { 
         super(); 
         
-        this.modal = modal;
-        this.orderTable = orderTable;
-        this.sectionMenu = sectionMenu;
+        this.orderTable = document.getElementById('order');
+        this.sectionMenu = document.getElementById('menu');
         
+        this.Listeners();
         this.DefaultData(); 
         this.UpdateDisplay();
     }
 
-    Modal = () => this.modal.classList.toggle('active');
+    Modal (id) {
+        let modal = document.getElementById('modal');
+        
+        if (modal) { 
+            modal.remove(); 
+            window.location.reload(false);
+        } else {
+            const obj = this.Read()[this.FilterByID(id)];
+            document.getElementsByTagName('body')[0].innerHTML += `
+            <div class="modal active" id="modal">
+                <div class="formulary center">
+                    <h2 class="text-formulary">Festival de la gastronomia</h2>
 
-    UpdateDisplay () {
-        this.sectionMenu.innerHTML = this.CreateElementsHTML(true);
-        this.orderTable.innerHTML = this.CreateElementsHTML(false);
+                    <p>Platillo: ${obj.name}</p>
+                    <p>precio:   ${obj.price}</p>
+
+                    <label for="quantity">Cantidad</label>
+                    <input type="number" name="quantity" placeholder="Cantidad">
+
+                    <button class="btn-buy" onclick="app.AddCart('${id}')">Comprar</button>
+                    <button class="btn-update" onclick="app.Modal()">Cancel</button>
+                </div>
+            </div>
+        `;
+        }
     }
 
-    CreateElementsHTML (isTrue) {
+    AddCart () {
+        this.Modal();
+        console.log('Added to cart');
+
+    }
+
+    UpdateDisplay () {
+        this.sectionMenu.innerHTML = this.CreateElementsHTML('menu');
+        this.orderTable.innerHTML = this.CreateElementsHTML('order');
+    }
+
+    CreateElementsHTML (element) {
         let products = [];
 
-        if (isTrue) {
+        if (element === 'menu') {
             this.Read().forEach(obj => {
                 products += ` 
                     <div class="menu-img" id="${obj.id}">
@@ -83,7 +114,7 @@ class App extends DataBase {
                     </div>
                 `
             });
-        } else {
+        } else if (element === 'order') {
             this.Read(false).forEach(obj => {
                 products += ` 
                     <tr>
@@ -96,9 +127,19 @@ class App extends DataBase {
                     </tr>
                 `
             });
-        }
+        } else { products = `<div>NO DATA</div>`; }
+
         return products;
     };
+
+    Listeners () {
+        this.sectionMenu.addEventListener('click', (e) => {
+            if (e.target && e.target.className === 'menu-img') {
+                this.Modal(e.target.id);
+                e.stopPropagation();
+            }
+        });
+    }
 
     DefaultData () {
         if (this.Read() && this.Read().length !== 0) return 
@@ -114,17 +155,4 @@ class App extends DataBase {
 
 const DATABASE_NAME = 'restauranDB';
 const DATABASE_ORDER = 'customerOrder';
-
-const sectionMenu = document.getElementById('menu');
-const sectionOrder = document.getElementById('order');
-const sectionModal = document.getElementById('modal');
-
-const app = new App(sectionMenu, sectionOrder, sectionModal);
-
-menu.addEventListener('click', (e) => {
-    if (e.target && e.target.className === 'menu-img') {
-        app.Modal();
-        e.stopPropagation();
-        console.log(e.target.id);
-    }
-});
+const app = new App();
