@@ -3,10 +3,8 @@ class DataBase {
         this.key = DATABASE_NAME || "restauranDB";
         this.keyTwo = DATABASE_ORDER || "customerOrder";
         
-        if (!localStorage.getItem(this.key))  {
-            const data = [];
-            localStorage.setItem(this.key, JSON.stringify(data));
-        }
+        if (!localStorage.getItem(this.key)) localStorage.setItem(this.key, JSON.stringify([]));
+        if (!localStorage.getItem(this.keyTwo)) localStorage.setItem(this.keyTwo, JSON.stringify([]));
     }
 
     Create (name, price, urlPhoto) {
@@ -33,18 +31,20 @@ class DataBase {
         this.SaveData(data);
     }
 
-    Delete(id) {
+    Delete (id) {
         let index = this.FilterByID(id);                //Get product ID
         const updateData = this.Read();                 //Get current Data
         updateData.splice(index, 1);                    //Delete obj
         this.SaveData(updateData);                      //Save new data
     }
 
-    Read = () => JSON.parse(localStorage.getItem(this.key)); 
+    // Read = () => JSON.parse(localStorage.getItem(this.key)); 
+    Read = (isTrue = true) => JSON.parse(localStorage.getItem(isTrue ? this.key : this.keyTwo));
     
     FilterByID = (id) => this.Read().findIndex(obj => obj.id === id);
 
-    SaveData = (data) => localStorage.setItem(this.key, JSON.stringify(data));
+    // SaveData = (data) => localStorage.setItem(this.key, JSON.stringify(data));
+    SaveData = (data, isTrue = true) => localStorage.setItem(isTrue ? this.key : this.keyTwo, JSON.stringify(data));
 
     // Math.random should be unique because of its seeding algorithm.
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
@@ -53,9 +53,10 @@ class DataBase {
 }
 
 class App extends DataBase {
-    constructor (sectionMenu, orderTable) { 
+    constructor (sectionMenu, orderTable, modal) { 
         super(); 
         
+        this.modal = modal;
         this.orderTable = orderTable;
         this.sectionMenu = sectionMenu;
         
@@ -63,50 +64,43 @@ class App extends DataBase {
         this.UpdateDisplay();
     }
 
-    Modal (id) {
-        // this.modal.classList.toggle('active');
-        // console.log('turn on modal');
-        console.log(id);
-    }
+    Modal = () => this.modal.classList.toggle('active');
 
     UpdateDisplay () {
         this.sectionMenu.innerHTML = this.CreateElementsHTML(true);
-        // this.orderTable.innerHTML = this.CreateElementsHTML(false);
+        this.orderTable.innerHTML = this.CreateElementsHTML(false);
     }
 
-    CreateElementsHTML = (x) => x ? this.Dishes() : this.Order();
-
-    Dishes() {
+    CreateElementsHTML (isTrue) {
         let products = [];
 
-        this.Read().forEach(obj => {
-            products += ` 
-                <div class="menu-img" id="${obj.id}">
-                    <img src="${obj.urlPhoto}" alt="${obj.name}" width="200">
-                    <h2>${obj.name}</h2>
-                </div>
-            `
-        });
-
+        if (isTrue) {
+            this.Read().forEach(obj => {
+                products += ` 
+                    <div class="menu-img" id="${obj.id}">
+                        <img src="${obj.urlPhoto}" alt="${obj.name}" width="200">
+                        <h2>${obj.name}</h2>
+                    </div>
+                `
+            });
+        } else {
+            this.Read(false).forEach(obj => {
+                products += ` 
+                    <tr>
+                        <td>${obj.id}</td>
+                        <td>${obj.name}</td>
+                        <td>${obj.quantity}</td>
+                        <td>${obj.price}</td>
+                        <td>${obj.price * obj.quantity}</td>
+                        <td><button class="icon-edit" onclick="app.Modal('${obj.id}')"><i class="far fa-edit"></i></button></td>
+                    </tr>
+                `
+            });
+        }
         return products;
-    }
+    };
 
-    Order() {
-        let products = [];
-
-        // this.Read().forEach(obj => {
-        //     products += ` 
-        //         <div class="menu-img" id="${obj.id}">
-        //             <img src="${obj.urlPhoto}" alt="${obj.name}" width="200">
-        //             <h2>${obj.name}</h2>
-        //         </div>
-        //     `
-        // });
-
-        return products;
-    }
-
-    DefaultData() {
+    DefaultData () {
         if (this.Read() && this.Read().length !== 0) return 
         this.Create("Menu Saludable",    15000, "img/menu-saludable.jpg");
         this.Create("Menu Italiano",     14000, "img/menu-italiano.jpg");
@@ -122,9 +116,10 @@ const DATABASE_NAME = 'restauranDB';
 const DATABASE_ORDER = 'customerOrder';
 
 const menu = document.getElementById('menu');
-const order = document.querySelector('order');
+const order = document.getElementById('order');
+const modal = document.getElementById('modal');
 
-const app = new App(menu, order);
+const app = new App(menu, order, modal);
 
 menu.addEventListener('click', (e) => {
     if (e.target && e.target.className === 'menu-img') {

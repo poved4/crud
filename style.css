@@ -105,30 +105,38 @@ header .logo {
   background: #f58d17;
 }
 
-.table-result tr th {
-  justify-content: space-around;
-  padding-left: 50px;
-}
-
 .table-result {
-  display: flex;
-  background: #D64A41;
+  text-align: center;
+  /* display: flex; */
   position: absolute;
   padding: 10px;
   /* padding-left: 160px;
   padding-right: 110px; */
   margin-left: 50%;
   margin-top: -20%;
+  border-collapse: collapse;
 }
 
-.icons-edit-delete {
-  display: block;
+.table-result thead {
+  background: #D64A41;
+  /* width: 100%; */
+}
+
+.table-result td, th {
+  min-width: 120px;
+  max-width: 150px;
+  /* justify-content: space-around; */
+  padding: 10px 0px;
+}
+
+/*.icons-edit-delete {
+   display: block;
   position: absolute;
   padding: 10px;
-  padding-left: 443px;
+  padding-left: 443px; 
   margin-left: 49.5%;
   margin-top: -16%;
-}
+}*/
 
 .icon-edit {
   background: #D49940;
