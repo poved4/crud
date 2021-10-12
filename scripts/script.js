@@ -72,7 +72,7 @@ class App extends DataBase {
         } else { 
             const obj = this.ReadOne(id);
             const modalElement = `
-                <div class="modal active" id="modal">
+                <div id="modal">
                     <div class="formulary center">
                         <h2 class="text-formulary">Festival de la gastronomia</h2>
     
@@ -82,8 +82,10 @@ class App extends DataBase {
                         <label for="quantity">Cantidad</label>
                         <input type="number" name="quantity" placeholder="Cantidad">
     
-                        <button name="${obj.id}" class="btn-buy">Update</button>
-                        <button name="${obj.id}" class="btn-update">Cancel</button>
+                        <div>
+                            <button name="${obj.id}" class="btn-buy">Update</button>
+                            <button name="${obj.id}" class="btn-update">Cancel</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -129,7 +131,7 @@ class App extends DataBase {
         if (element === 'menu') {
             this.Read().forEach(obj => {
                 products += ` 
-                    <div class="menu-img" id="${obj.id}">
+                    <div class="dishes" id="${obj.id}">
                         <img src="${obj.urlPhoto}" alt="${obj.name}">
                         <h2>${obj.name}</h2>
                     </div>
@@ -137,7 +139,7 @@ class App extends DataBase {
             });
 
             this.sectionMenu.addEventListener('click', (e) => {
-                if (e.target && e.target.className === 'menu-img') {
+                if (e.target && e.target.className === 'dishes') {
                     this.Modal(e.target.id);
                     e.stopPropagation();
                 }
