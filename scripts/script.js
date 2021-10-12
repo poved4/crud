@@ -130,7 +130,7 @@ class App extends DataBase {
             this.Read().forEach(obj => {
                 products += ` 
                     <div class="menu-img" id="${obj.id}">
-                        <img src="${obj.urlPhoto}" alt="${obj.name}" width="200">
+                        <img src="${obj.urlPhoto}" alt="${obj.name}">
                         <h2>${obj.name}</h2>
                     </div>
                 `
@@ -152,8 +152,10 @@ class App extends DataBase {
                         <td>${obj.quantity}</td>
                         <td>${obj.price}</td>
                         <td>${obj.price * obj.quantity}</td>
-                        <td><button class="icon-edit" name="${obj.id}"><i class="far fa-edit"></i></button></td>
-                        <td><button class="icon-delete" name="${obj.idOrder}"><i class="far fa-trash-alt"></i></button></td>
+                        <td>
+                            <button class="icon-edit" name="${obj.id}"><i class="far fa-edit"></i></button>
+                            <button class="icon-delete" name="${obj.idOrder}"><i class="far fa-trash-alt"></i></button>
+                        </td>
                     </tr>
                 `
             });
