@@ -99,14 +99,23 @@ class App extends DataBase {
 
     AddToCart (id) {
         const order = this.ReadOne(id);
-        const quantity = document.querySelector(".formulary input").value;
-        order.quantity = quantity === null ? 1 : Math.abs(parseInt(quantity));
+        const quantity = document.querySelector(".formulary input").value || 1;
+        order.quantity = Math.abs(parseInt(quantity));
+        order.idOrder = this.GenerateID();
         delete order.urlPhoto;
         
         const data = this.Read(false);
         data.push(order);
         this.SaveData(data, false);
         this.Modal();
+    }
+
+    DeleteToCart (id) {
+        const index = this.Read(false).findIndex(obj => obj.idOrder === id);
+        const updateData = this.Read(false);
+        updateData.splice(index, 1);
+        this.SaveData(updateData, false);
+        this.UpdateDisplay();
     }
 
     UpdateDisplay () {
@@ -144,12 +153,14 @@ class App extends DataBase {
                         <td>${obj.price}</td>
                         <td>${obj.price * obj.quantity}</td>
                         <td><button class="icon-edit" name="${obj.id}"><i class="far fa-edit"></i></button></td>
+                        <td><button class="icon-delete" name="${obj.idOrder}"><i class="far fa-trash-alt"></i></button></td>
                     </tr>
                 `
             });
 
             this.orderTable.addEventListener('click', (e) => {
                 if (e.target && e.target.className === 'icon-edit') this.Modal(e.target.name);
+                if (e.target && e.target.className === 'icon-delete') this.DeleteToCart(e.target.name);
                 e.stopPropagation();
             });
 
