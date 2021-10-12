@@ -71,7 +71,7 @@ class App extends DataBase {
             window.location.reload(false);
         } else { 
             const obj = this.ReadOne(id);
-            const modalElement = `
+            document.getElementsByTagName('body')[0].innerHTML += `
                 <div id="modal">
                     <div class="formulary center">
                         <h2 class="text-formulary">Festival de la gastronomia</h2>
@@ -89,13 +89,6 @@ class App extends DataBase {
                     </div>
                 </div>
             `;
-
-            document.getElementsByTagName('body')[0].innerHTML += modalElement;
-        //     document.getElementById('modal').addEventListener('click', (e) => {
-        //         if (e.target && e.target.className === 'btn-buy') this.AddToCart(e.target.name);
-        //         if (e.target && e.target.className === 'btn-update') this.Modal();
-        //         e.stopPropagation();
-        //     });
         } 
     }
 
@@ -109,6 +102,8 @@ class App extends DataBase {
         const data = this.Read(false);
         data.push(order);
         this.SaveData(data, false);
+        
+        this.UpdateDisplay();
         this.Modal();
     }
 
@@ -122,10 +117,13 @@ class App extends DataBase {
 
     UpdateToCart (id) {
         const index = this.Read(false).findIndex(obj => obj.idOrder === id);
-        const updateData = this.Read(false);
-        updateData.splice(index, 1);
-        // this.SaveData(updateData, false);
-        // this.UpdateDisplay();
+        const order = this.Read(false);
+        const data = order[index];
+        data.quantity = parseInt(prompt("Cantidad de platillos")) || 1;
+
+        order.splice(index, 1, data)
+        this.SaveData(order, false)
+        this.UpdateDisplay();
     }
 
     UpdateDisplay () {
@@ -171,6 +169,13 @@ class App extends DataBase {
         this.Create("Menu Saludable",    15000, "img/menu-saludable.jpg");
         this.Create("Menu Italiano",     14000, "img/menu-italiano.jpg");
         this.Create("Menu Corriente",    12000, "img/menu-corriente.jpg");
+        this.Create("Menu Mexicano",     25000, "img/menu-mexicano.jpg");
+        this.Create("Menu Libre",        25000, "img/menu-libre.jpg");
+        this.Create("Menu Saludable",    15000, "img/menu-saludable.jpg");
+        this.Create("Menu Italiano",     14000, "img/menu-italiano.jpg");
+        this.Create("Menu Corriente",    12000, "img/menu-corriente.jpg");
+        this.Create("Menu Mexicano",     25000, "img/menu-mexicano.jpg");
+        this.Create("Menu Libre",        25000, "img/menu-libre.jpg");
         this.Create("Menu Mexicano",     25000, "img/menu-mexicano.jpg");
         this.Create("Menu Libre",        25000, "img/menu-libre.jpg");
     }
