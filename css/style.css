@@ -104,9 +104,9 @@ header .logo {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
 }
 
 #modal input {
@@ -169,56 +169,52 @@ footer .text-footer {
 }
 
 /*  --Icons-- */
-.icons-edit-delete {
-  display: block;
-  position: absolute;
-  padding: 10px;
-  padding-left: 443px;
-  margin-left: 49.5%;
-  margin-top: -16%;
+.icon {
+  width: 25px;
+  padding: 10;
+  border: none;
+  height: 25px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 30%;
 }
 
-.icon-edit {
+.icon:hover {
+  opacity: 0.8;
+}
+
+.iconYellow {
   background: #D49940;
-  padding: 5px;
-  color: white;
-  border: none;
 }
 
-.icon-delete {
+.iconRed {
   background: #D64A41;
-  padding: 5px;
-  color: white;
-  border: none;
 }
 
 /*  --Buttons-- */
-.btn-buy {
-  background: #FF9534;
+.btn {
+  width: 100px;
   border: none;
-  padding: 8px;
-  margin-left: 5%;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 5px;
+  height: 30px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.btn-buy:hover {
+.btnYellow {
+  background: #FF9534;
+}
+
+.btnYellow:hover {
   background: #f77c18;
 }
 
-.btn-update {
+.btnRed {
   background: #7C0101;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-left: 10%;
-  padding: 8px;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 
-.btn-update:hover {
-  background: #f58d17;
+.btnRed:hover {
+  background: #530101;
 }
 /*# sourceMappingURL=style.css.map */

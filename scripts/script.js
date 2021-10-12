@@ -83,19 +83,19 @@ class App extends DataBase {
                         <input type="number" name="quantity" placeholder="Cantidad">
     
                         <div>
-                            <button name="${obj.id}" class="btn-buy">Update</button>
-                            <button name="${obj.id}" class="btn-update">Cancel</button>
+                            <button onclick="app.AddToCart('${obj.id}')" class="btn btnYellow">Update</button>
+                            <button onclick="app.Modal('${obj.id}')" class="btn btnRed">Cancel</button>
                         </div>
                     </div>
                 </div>
             `;
 
             document.getElementsByTagName('body')[0].innerHTML += modalElement;
-            document.getElementById('modal').addEventListener('click', (e) => {
-                if (e.target && e.target.className === 'btn-buy') this.AddToCart(e.target.name);
-                if (e.target && e.target.className === 'btn-update') this.Modal();
-                e.stopPropagation();
-            });
+        //     document.getElementById('modal').addEventListener('click', (e) => {
+        //         if (e.target && e.target.className === 'btn-buy') this.AddToCart(e.target.name);
+        //         if (e.target && e.target.className === 'btn-update') this.Modal();
+        //         e.stopPropagation();
+        //     });
         } 
     }
 
@@ -120,6 +120,14 @@ class App extends DataBase {
         this.UpdateDisplay();
     }
 
+    UpdateToCart (id) {
+        const index = this.Read(false).findIndex(obj => obj.idOrder === id);
+        const updateData = this.Read(false);
+        updateData.splice(index, 1);
+        // this.SaveData(updateData, false);
+        // this.UpdateDisplay();
+    }
+
     UpdateDisplay () {
         this.sectionMenu.innerHTML = this.CreateElementsHTML('menu');
         this.orderTable.innerHTML = this.CreateElementsHTML('order');
@@ -131,20 +139,12 @@ class App extends DataBase {
         if (element === 'menu') {
             this.Read().forEach(obj => {
                 products += ` 
-                    <div class="dishes" id="${obj.id}">
+                    <div class="dishes" onclick="app.Modal('${obj.id}')">
                         <img src="${obj.urlPhoto}" alt="${obj.name}">
                         <h2>${obj.name}</h2>
                     </div>
                 `
             });
-
-            this.sectionMenu.addEventListener('click', (e) => {
-                if (e.target && e.target.className === 'dishes') {
-                    this.Modal(e.target.id);
-                    e.stopPropagation();
-                }
-            });
-
         } else if (element === 'order') {
             this.Read(false).forEach((obj, i) => {
                 products += ` 
@@ -155,19 +155,12 @@ class App extends DataBase {
                         <td>${obj.price}</td>
                         <td>${obj.price * obj.quantity}</td>
                         <td>
-                            <button class="icon-edit" name="${obj.id}"><i class="far fa-edit"></i></button>
-                            <button class="icon-delete" name="${obj.idOrder}"><i class="far fa-trash-alt"></i></button>
+                            <button class="icon iconYellow" onclick="app.UpdateToCart('${obj.idOrder}')"><i class="far fa-edit"></i></button>
+                            <button class="icon iconRed icon-delete" onclick="app.DeleteToCart('${obj.idOrder}')"><i class="far fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 `
             });
-
-            this.orderTable.addEventListener('click', (e) => {
-                if (e.target && e.target.className === 'icon-edit') this.Modal(e.target.name);
-                if (e.target && e.target.className === 'icon-delete') this.DeleteToCart(e.target.name);
-                e.stopPropagation();
-            });
-
         } else { products = `<div>NO DATA</div>`; }
 
         return products;
